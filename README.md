@@ -6,8 +6,8 @@ Previously, the only way to have an wordpress site entirely cached by Cloudflare
 
 
 
-The basic idea here is that there is a subdomain which hosts the real Wordpress site, (cms.example.com) and a subdomain which hosts a reverse proxy to the real wordpress site which rewrites all the URLs to point to itself on the fly (www.example.com). To prevent an SSO nightmare, the cms site is configured to block WebCrawlers, but the proxy removes those restrictions on the fly as well. Then Cloudflare is placed in front of the www site and configured using a page rule to cache everything at www.example.com/*
+The basic idea here is that there is the cration of a subdomain which hosts the real Wordpress site, (cms.example.com) and a subdomain which hosts a reverse proxy to the real wordpress site which rewrites all the URLs in the site html and javascript to point to itself on the fly (www.example.com). To prevent an SSO nightmare, the cms site is configured to block WebCrawlers, but the proxy removes those restrictions on the fly as well. Then Cloudflare is placed in front of the www site and configured using a page rule to cache everything at www.example.com/*
 
 
 
-Cloudflare and the proxy can pass-though POST and PUT requests and only cache GETs, so the site is not entirely static and so web forms and ajax should still is able to work the same.
+Cloudflare and the proxy can pass-though POST and PUT requests and only cache GETs, so the site is not entirely static and web forms and ajax should still be able to work the same.
