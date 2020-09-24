@@ -1,6 +1,6 @@
 <?php
 
-$source_domain = 'cms.example.com'; // edit this to the real domain name
+$source_domain = 'cms.tier2tickets.com';
 
 $request_headers = [];
 $response_headers = [];
@@ -22,7 +22,7 @@ foreach (getallheaders() as $key => $value) {
 
 curl_setopt( $ch, CURLOPT_HTTPHEADER, $request_headers);
 curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, $_SERVER['REQUEST_METHOD']);
-curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, true );
+curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, false );
 curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
 curl_setopt( $ch, CURLOPT_POSTFIELDS, file_get_contents('php://input'));
 curl_setopt( $ch, CURLOPT_ENCODING, '' );
@@ -53,10 +53,12 @@ else
 
 foreach ($response_headers as $key => $value) {
 	if (!in_array(strtolower($key), ['x-robots-tag', 'transfer-encoding', 'set-cookie', 'content-security-policy', 'x-content-security-policy', 'connection', 'content-length', 'content-encoding'])) {
+		if (strtolower($key) == 'location' && in_array($response_info['http_code'], [200, 301, 302, 303, 307, 308])){
+			$value = str_replace('//' . $source_domain . '/', '//' . $_SERVER['HTTP_HOST'] . '/', $value);		# replace "//cms.example.com/" with "//www.example.com/"
+		}
 		header ($key . ': ' . $value);
 	}
 }
-
 
 if (substr($response_info['content_type'], 0, 4) == 'text') {
 	$response = str_replace('//' . $source_domain . '/', '//' . $_SERVER['HTTP_HOST'] . '/', $response); 			# replace "//cms.example.com/" with "//www.example.com/"
