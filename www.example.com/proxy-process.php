@@ -1,6 +1,6 @@
 <?php
 
-$source_domain = 'cms.tier2tickets.com';
+$source_domain = 'cms.example.com'; // change to the real domain name
 
 $request_headers = [];
 $response_headers = [];
