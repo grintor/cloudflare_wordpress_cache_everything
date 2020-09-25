@@ -54,15 +54,17 @@ else
 foreach ($response_headers as $key => $value) {
 	if (!in_array(strtolower($key), ['x-robots-tag', 'transfer-encoding', 'set-cookie', 'content-security-policy', 'x-content-security-policy', 'connection', 'content-length', 'content-encoding'])) {
 		if (strtolower($key) == 'location' && in_array($response_info['http_code'], [200, 301, 302, 303, 307, 308])){
-			$value = str_replace('//' . $source_domain . '/', '//' . $_SERVER['HTTP_HOST'] . '/', $value);		# replace "//cms.example.com/" with "//www.example.com/"
+			$value = str_replace('//' . $source_domain, '//' . $_SERVER['HTTP_HOST'], $value);							# replace "//cms.example.com" with "//www.example.com"
 		}
 		header ($key . ': ' . $value);
 	}
 }
 
 if (substr($response_info['content_type'], 0, 4) == 'text') {
-	$response = str_replace('//' . $source_domain . '/', '//' . $_SERVER['HTTP_HOST'] . '/', $response); 			# replace "//cms.example.com/" with "//www.example.com/"
+	$response = str_replace('//' . $source_domain . '/', '//' . $_SERVER['HTTP_HOST'] . '/', $response); 				# replace "//cms.example.com/" with "//www.example.com/"
 	$response = str_replace('\\/\\/' . $source_domain . '\\/', '\\/\\/' . $_SERVER['HTTP_HOST'] . '\\/', $response);	# replace "\/\/cms.example.com\/" with "\/\/www.example.com\/"
+	$response = str_replace('//' . $source_domain . '"', '//' . $_SERVER['HTTP_HOST'] . '"', $response);				# replace "\/\/cms.example.com"" with "\/\/www.example.com"" (trailing double quote)
+	$response = str_replace('//' . $source_domain . '\'', '//' . $_SERVER['HTTP_HOST'] . '\'', $response);				# replace "\/\/cms.example.com'" with "\/\/www.example.com'" (trailing single quote)
 }
 
 
